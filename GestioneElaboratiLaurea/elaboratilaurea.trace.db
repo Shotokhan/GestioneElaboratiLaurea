@@ -1,0 +1,32 @@
+2020-02-04 12:32:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "ASSEGNAZIONE" not found; SQL statement:
+CREATE TABLE CARICAMENTO(IDCARICAMENTO INT PRIMARY KEY, ASSEGNAZIONE INT NOT NULL, SEDUTADILAUREA INT, DATACARICAMENTO DATE NOT NULL, FOREIGN KEY (ASSEGNAZIONE) REFERENCES ASSEGNAZIONE ON DELETE CASCADE, FOREIGN KEY (SEDUTADILAUREA) REFERENCES SEDUTADILAUREA ON DELETE SET NULL); [42102-200]
+2020-02-04 12:32:10 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Cannot drop "ELABORATO" because "CONSTRAINT_DF" depends on it; SQL statement:
+DROP TABLE IF EXISTS ELABORATO; [90107-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:98)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:124)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:198)
+	at org.h2.command.Command.executeUpdate(Command.java:251)
+	at org.h2.jdbc.JdbcStatement.executeUpdateInternal(JdbcStatement.java:168)
+	at org.h2.jdbc.JdbcStatement.executeUpdate(JdbcStatement.java:126)
+	at main.DataDefinition.dropTables(DataDefinition.java:106)
+	at main.DataDefinition.createTables(DataDefinition.java:80)
+	at main.DBCreate.main(DBCreate.java:6)
+2020-02-04 12:33:45 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Cannot drop "ELABORATO" because "CONSTRAINT_DF" depends on it; SQL statement:
+DROP TABLE IF EXISTS ELABORATO; [90107-200]
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:576)
+	at org.h2.message.DbException.getJdbcSQLException(DbException.java:429)
+	at org.h2.message.DbException.get(DbException.java:205)
+	at org.h2.command.ddl.DropTable.prepareDrop(DropTable.java:98)
+	at org.h2.command.ddl.DropTable.update(DropTable.java:124)
+	at org.h2.command.CommandContainer.update(CommandContainer.java:198)
+	at org.h2.command.Command.executeUpdate(Command.java:251)
+	at org.h2.jdbc.JdbcStatement.executeUpdateInternal(JdbcStatement.java:168)
+	at org.h2.jdbc.JdbcStatement.executeUpdate(JdbcStatement.java:126)
+	at main.DataDefinition.dropTables(DataDefinition.java:107)
+	at main.DBDrop.main(DBDrop.java:6)
