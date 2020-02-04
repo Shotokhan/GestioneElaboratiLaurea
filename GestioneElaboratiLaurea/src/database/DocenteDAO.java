@@ -5,7 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 
+import entity.Assegnazione;
 import entity.Docente;
 import entity.Elaborato;
 
@@ -29,7 +31,8 @@ public class DocenteDAO {
 	}
 	
 	public Docente read(int idDocente) throws DAOException {
-		// TODO: deve riempire le liste: "ListaElaborati" e "ListaAssegnazioni"
+		ElaboratoDAO elaboratoDAO = new ElaboratoDAO();
+		AssegnazioneDAO assegnazioneDAO = new AssegnazioneDAO();
 		Docente docente = new Docente();
 		try {
 			Connection conn = DBManager.getConnection();
@@ -39,6 +42,8 @@ public class DocenteDAO {
 			ResultSet result = stmt.executeQuery();
 			if(result.next()) {
 				docente.setIdDocente(result.getInt("IDDOCENTE"));
+				docente.setListaElaborati((ArrayList<Elaborato>) elaboratoDAO.read(docente));
+				docente.setListaAssegnazioni((ArrayList<Assegnazione>) assegnazioneDAO.read(docente));
 			}
 			return docente;
 		} catch (SQLException e) {
@@ -47,7 +52,8 @@ public class DocenteDAO {
 	}
 	
 	public Docente read(Elaborato elaborato) throws DAOException {
-		// TODO: deve riempire le liste: "ListaElaborati" e "ListaAssegnazioni"
+		ElaboratoDAO elaboratoDAO = new ElaboratoDAO();
+		AssegnazioneDAO assegnazioneDAO = new AssegnazioneDAO();
 		Docente docente = new Docente();
 		try {
 			Connection conn = DBManager.getConnection();
@@ -59,6 +65,8 @@ public class DocenteDAO {
 			ResultSet result = stmt.executeQuery();
 			if(result.next()) {
 				docente.setIdDocente(result.getInt("IDDOCENTE"));
+				docente.setListaElaborati((ArrayList<Elaborato>) elaboratoDAO.read(docente));
+				docente.setListaAssegnazioni((ArrayList<Assegnazione>) assegnazioneDAO.read(docente));
 			}
 			return docente;
 		} catch (SQLException e) {

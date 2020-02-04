@@ -5,8 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 import entity.Preferenza;
+import entity.Richiesta;
 import enumeration.StatoRichiesta;
 
 public class PreferenzaDAO {
@@ -33,7 +36,8 @@ public class PreferenzaDAO {
 	}
 
 	public Preferenza read(int idPreferenza) throws DAOException {
-		// TODO - questa funzione deve settare i campi elaborato e richiesta
+		ElaboratoDAO elaboratoDAO = new ElaboratoDAO();
+		RichiestaDAO richiestaDAO = new RichiestaDAO();
 		Preferenza preferenza = new Preferenza();
 		try {
 			Connection conn = DBManager.getConnection();
@@ -44,8 +48,34 @@ public class PreferenzaDAO {
 			if(result.next()) {
 				preferenza.setIdPreferenza(idPreferenza);
 				preferenza.setStato(StatoRichiesta.valueOf(result.getString("STATOPREFERENZA")));
+				preferenza.setElaborato(elaboratoDAO.read(result.getInt("ELABORATO")));
+				preferenza.setRichiesta(richiestaDAO.read(result.getInt("RICHIESTA")));
 			}
 			return preferenza;
+		} catch (SQLException e) {
+			throw new DAOException("Lettura preferenza non riuscita");
+		}
+	}
+	
+	public List<Preferenza> read(Richiesta richiesta) throws DAOException {
+		ElaboratoDAO elaboratoDAO = new ElaboratoDAO();
+		List<Preferenza> listaPreferenze = new ArrayList<Preferenza>();
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM PREFERENZA WHERE RICHIESTA = ? "
+					+ "ORDER BY PRIORITA DESC;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, richiesta.getIdRichiesta());
+			ResultSet result = stmt.executeQuery();
+			while(result.next()) {
+				Preferenza preferenza = new Preferenza();
+				preferenza.setIdPreferenza(result.getInt("IDPREFERENZA"));
+				preferenza.setStato(StatoRichiesta.valueOf(result.getString("STATOPREFERENZA")));
+				preferenza.setElaborato(elaboratoDAO.read(result.getInt("ELABORATO")));
+				preferenza.setRichiesta(richiesta);
+				listaPreferenze.add(preferenza);
+			}
+			return listaPreferenze;
 		} catch (SQLException e) {
 			throw new DAOException("Lettura preferenza non riuscita");
 		}

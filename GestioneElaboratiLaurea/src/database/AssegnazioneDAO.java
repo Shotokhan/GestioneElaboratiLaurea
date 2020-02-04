@@ -73,15 +73,37 @@ public class AssegnazioneDAO {
 			ResultSet result = stmt.executeQuery();
 			while(result.next()) {
 				Assegnazione assegnazione = new Assegnazione(
-						elaboratoDAO.read(result.getInt("ELABORATO")));
+						elaboratoDAO.read(result.getInt("ELABORATO"), docente));
 				assegnazione.setIdAssegnazione(result.getInt("IDASSEGNAZIONE"));
 				assegnazione.setDataAssegnazione(result.getDate("DATAASSEGNAZIONE"));
-				assegnazione.setStudente(studenteDAO.read(result.getInt("STUDENTE")));
+				assegnazione.setStudente(studenteDAO.read(result.getInt("STUDENTE"), assegnazione));
 				listaAssegnazioni.add(assegnazione);
 			}
 			return listaAssegnazioni;
 		} catch (SQLException e) {
 			throw new DAOException("Lettura assegnazioni non riuscita");
+		}
+	}
+	
+	public Assegnazione read(Studente studente) throws DAOException {
+		ElaboratoDAO elaboratoDAO = new ElaboratoDAO();
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM ASSEGNAZIONE WHERE STUDENTE = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, studente.getIdStudente());
+			ResultSet result = stmt.executeQuery();
+			Assegnazione assegnazione = null;
+			if(result.next()) {
+				assegnazione = new Assegnazione(
+						elaboratoDAO.read(result.getInt("ELABORATO")));
+				assegnazione.setIdAssegnazione(result.getInt("IDASSEGNAZIONE"));
+				assegnazione.setDataAssegnazione(result.getDate("DATAASSEGNAZIONE"));
+				assegnazione.setStudente(studente);
+			}
+			return assegnazione;
+		} catch (SQLException e) {
+			throw new DAOException("Lettura assegnazione non riuscita");
 		}
 	}
 	

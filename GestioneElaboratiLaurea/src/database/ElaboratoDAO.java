@@ -8,12 +8,11 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
+import entity.Docente;
 import entity.Elaborato;
 import enumeration.StatoElaborato;
 
 public class ElaboratoDAO {
-	
-	// TODO : lettura di tutti gli elaborati relativi ad un docente
 	
 	public Elaborato create(Elaborato elaborato) throws DAOException {
 		try {
@@ -52,6 +51,46 @@ public class ElaboratoDAO {
 			return elaborato;
 		} catch (SQLException e) {
 			throw new DAOException("Lettura elaborato non riuscita");
+		}
+	}
+	
+	public Elaborato read(int idElaborato, Docente docente) throws DAOException {
+		Elaborato elaborato = new Elaborato();
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM ELABORATO WHERE IDELABORATO = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, idElaborato);
+			ResultSet result = stmt.executeQuery();
+			if(result.next()) {
+				elaborato.setIdElaborato(result.getInt("IDELABORATO"));
+				elaborato.setDocente(docente);
+				elaborato.setInsegnamento(result.getString("INSEGNAMENTO"));
+			}
+			return elaborato;
+		} catch (SQLException e) {
+			throw new DAOException("Lettura elaborato non riuscita");
+		}
+	}
+	
+	public List<Elaborato> read(Docente docente) throws DAOException {
+		List<Elaborato> listaElaborati = new ArrayList<Elaborato>();
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM ELABORATO WHERE DOCENTE = ?";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, docente.getIdDocente());
+			ResultSet result = stmt.executeQuery();
+			while(result.next()) {
+				Elaborato elaborato = new Elaborato();
+				elaborato.setIdElaborato(result.getInt("IDELABORATO"));
+				elaborato.setDocente(docente);
+				elaborato.setInsegnamento(result.getString("INSEGNAMENTO"));
+				listaElaborati.add(elaborato);
+			}
+			return listaElaborati;
+		} catch (SQLException e) {
+			throw new DAOException("Lettura elaborati non riuscita");
 		}
 	}
 	

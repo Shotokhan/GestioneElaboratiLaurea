@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import entity.Assegnazione;
 import entity.Studente;
 import enumeration.StatoStudente;
 
@@ -30,8 +31,7 @@ public class StudenteDAO {
 	}
 	
 	public Studente read(int idStudente) throws DAOException {
-		// TODO - deve riempire il campo "elaborato" con l'elaborato a cui lo studente
-		// è eventualmente stato assegnato
+		AssegnazioneDAO assegnazioneDAO = new AssegnazioneDAO();
 		Studente studente = new Studente();
 		try {
 			Connection conn = DBManager.getConnection();
@@ -42,6 +42,26 @@ public class StudenteDAO {
 			if(result.next()) {
 				studente.setIdStudente(result.getInt("IDSTUDENTE"));
 				studente.setCFU(result.getInt("CFU"));
+				studente.setElaborato(assegnazioneDAO.read(studente));
+			}
+			return studente;
+		} catch (SQLException e) {
+			throw new DAOException("Lettura studente non riuscita");
+		}
+	}
+	
+	public Studente read(int idStudente, Assegnazione assegnazione) throws DAOException {
+		Studente studente = new Studente();
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM STUDENTE WHERE IDSTUDENTE = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, idStudente);
+			ResultSet result = stmt.executeQuery();
+			if(result.next()) {
+				studente.setIdStudente(result.getInt("IDSTUDENTE"));
+				studente.setCFU(result.getInt("CFU"));
+				studente.setElaborato(assegnazione);
 			}
 			return studente;
 		} catch (SQLException e) {
@@ -83,4 +103,5 @@ public class StudenteDAO {
 			throw new DAOException("Eliminazione studente non riuscita");
 		}
 	}
+
 }

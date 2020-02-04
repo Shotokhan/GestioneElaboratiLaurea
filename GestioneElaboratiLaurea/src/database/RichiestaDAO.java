@@ -41,7 +41,8 @@ public class RichiestaDAO {
 	}
 	
 	public Richiesta read(int idRichiesta) throws DAOException {
-		// TODO : questa funzione deve settare i campi listaPreferenze e studente
+		StudenteDAO studenteDAO = new StudenteDAO();
+		PreferenzaDAO preferenzaDAO = new PreferenzaDAO();
 		Richiesta richiesta = new Richiesta();
 		try {
 			Connection conn = DBManager.getConnection();
@@ -52,6 +53,8 @@ public class RichiestaDAO {
 			if(result.next()) {
 				richiesta.setIdRichiesta(idRichiesta);
 				richiesta.setStatoRichiesta(StatoRichiesta.valueOf(result.getString("STATORICHIESTA")));
+				richiesta.setStudente(studenteDAO.read(result.getInt("STUDENTE")));
+				richiesta.setListaPreferenze((ArrayList<Preferenza>) preferenzaDAO.read(richiesta));
 			}
 			return richiesta;
 		} catch (SQLException e) {
