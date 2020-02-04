@@ -14,19 +14,19 @@ public class DataDefinition {
 			Connection conn = DBManager.getConnection();
 			ArrayList<String> createTableStatements = new ArrayList<String>();
 			String docente = "CREATE TABLE DOCENTE("
-					+ "IDDOCENTE INT PRIMARY KEY);";
+					+ "IDDOCENTE INT AUTO_INCREMENT PRIMARY KEY);";
 			createTableStatements.add(docente);
 			String studente = "CREATE TABLE STUDENTE("
-					+ "IDSTUDENTE INT PRIMARY KEY, "
+					+ "IDSTUDENTE INT AUTO_INCREMENT PRIMARY KEY, "
 					+ "CFU INT NOT NULL, "
 					+ "STATOSTUDENTE VARCHAR(16) NOT NULL);";
 			createTableStatements.add(studente);
 			String sedutaDiLaurea = "CREATE TABLE SEDUTADILAUREA("
-					+ "IDSEDUTADILAUREA INT PRIMARY KEY, "
+					+ "IDSEDUTADILAUREA INT AUTO_INCREMENT PRIMARY KEY, "
 					+ "SCADENZACARICAMENTOELABORATI DATE NOT NULL);";
 			createTableStatements.add(sedutaDiLaurea);
 			String elaborato = "CREATE TABLE ELABORATO("
-					+ "IDELABORATO INT PRIMARY KEY, "
+					+ "IDELABORATO INT AUTO_INCREMENT PRIMARY KEY, "
 					+ "INSEGNAMENTO VARCHAR(50) NOT NULL, "
 					+ "DOCENTE INT NOT NULL, "
 					+ "STATOELABORATO VARCHAR(14) NOT NULL, "
@@ -34,14 +34,14 @@ public class DataDefinition {
 					+ "ON DELETE CASCADE);";
 			createTableStatements.add(elaborato);
 			String richiesta = "CREATE TABLE RICHIESTA("
-					+ "IDRICHIESTA INT PRIMARY KEY, "
+					+ "IDRICHIESTA INT AUTO_INCREMENT PRIMARY KEY, "
 					+ "STATORICHIESTA VARCHAR(9) NOT NULL, "
 					+ "STUDENTE INT NOT NULL, "
 					+ "FOREIGN KEY (STUDENTE) REFERENCES STUDENTE "
 					+ "ON DELETE CASCADE);";
 			createTableStatements.add(richiesta);
 			String preferenza = "CREATE TABLE PREFERENZA("
-					+ "IDPREFERENZA INT PRIMARY KEY, "
+					+ "IDPREFERENZA INT AUTO_INCREMENT PRIMARY KEY, "
 					+ "STATOPREFERENZA VARCHAR(9) NOT NULL, "
 					+ "PRIORITA INT NOT NULL, "
 					+ "RICHIESTA INT NOT NULL, "
@@ -52,7 +52,7 @@ public class DataDefinition {
 					+ "ON DELETE CASCADE);";
 			createTableStatements.add(preferenza);
 			String assegnazione = "CREATE TABLE ASSEGNAZIONE("
-					+ "IDASSEGNAZIONE INT PRIMARY KEY, "
+					+ "IDASSEGNAZIONE INT AUTO_INCREMENT PRIMARY KEY, "
 					+ "ELABORATO INT NOT NULL, "
 					+ "STUDENTE INT NOT NULL, "
 					+ "DATAASSEGNAZIONE DATE NOT NULL, "
@@ -62,7 +62,7 @@ public class DataDefinition {
 					+ "ON DELETE CASCADE);";
 			createTableStatements.add(assegnazione);
 			String caricamento = "CREATE TABLE CARICAMENTO("
-					+ "IDCARICAMENTO INT PRIMARY KEY, "
+					+ "IDCARICAMENTO INT AUTO_INCREMENT PRIMARY KEY, "
 					+ "ASSEGNAZIONE INT NOT NULL, "
 					+ "SEDUTADILAUREA INT, "
 					+ "DATACARICAMENTO DATE NOT NULL, "

@@ -12,6 +12,8 @@ public class Elaborato {
 		this.setInsegnamento(other.getInsegnamento());
 	}
 	
+	public Elaborato() {}
+
 	public int getIdElaborato() {
 		return idElaborato;
 	}
