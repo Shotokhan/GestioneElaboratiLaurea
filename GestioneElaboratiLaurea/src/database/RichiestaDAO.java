@@ -55,6 +55,8 @@ public class RichiestaDAO {
 				richiesta.setStatoRichiesta(StatoRichiesta.valueOf(result.getString("STATORICHIESTA")));
 				richiesta.setStudente(studenteDAO.read(result.getInt("STUDENTE")));
 				richiesta.setListaPreferenze((ArrayList<Preferenza>) preferenzaDAO.read(richiesta));
+			} else {
+				throw new DAOException("Richiesta non trovata: id non valido");
 			}
 			return richiesta;
 		} catch (SQLException e) {
@@ -63,6 +65,7 @@ public class RichiestaDAO {
 	}
 	
 	public Richiesta update(StatoRichiesta nuovoStato, Richiesta richiesta) throws DAOException {
+		PreferenzaDAO preferenzaDAO = new PreferenzaDAO();
 		try {
 			Connection conn = DBManager.getConnection();
 			String query = "UPDATE RICHIESTA SET STATORICHIESTA = ? "
@@ -74,6 +77,11 @@ public class RichiestaDAO {
 			if(affected == 0) {
 				throw new DAOException("Aggiornamento stato richiesta non riuscito: "
 						+ "id non corretto");
+			}
+			if(nuovoStato.equals(StatoRichiesta.RESPINTA)) {
+				for(Preferenza preferenza : richiesta.getListaPreferenze()) {
+					preferenzaDAO.update(StatoRichiesta.RESPINTA, preferenza);
+				}
 			}
 			return richiesta;
 		} catch (SQLException e) {

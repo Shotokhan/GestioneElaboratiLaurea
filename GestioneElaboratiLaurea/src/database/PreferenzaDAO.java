@@ -50,6 +50,8 @@ public class PreferenzaDAO {
 				preferenza.setStato(StatoRichiesta.valueOf(result.getString("STATOPREFERENZA")));
 				preferenza.setElaborato(elaboratoDAO.read(result.getInt("ELABORATO")));
 				preferenza.setRichiesta(richiestaDAO.read(result.getInt("RICHIESTA")));
+			} else {
+				throw new DAOException("Preferenza non trovata: id non valido");
 			}
 			return preferenza;
 		} catch (SQLException e) {

@@ -47,6 +47,8 @@ public class ElaboratoDAO {
 				elaborato.setIdElaborato(result.getInt("IDELABORATO"));
 				elaborato.setDocente(docenteDAO.read(result.getInt("DOCENTE")));
 				elaborato.setInsegnamento(result.getString("INSEGNAMENTO"));
+			} else {
+				throw new DAOException("Elaborato non trovato: id non valido");
 			}
 			return elaborato;
 		} catch (SQLException e) {
@@ -66,6 +68,8 @@ public class ElaboratoDAO {
 				elaborato.setIdElaborato(result.getInt("IDELABORATO"));
 				elaborato.setDocente(docente);
 				elaborato.setInsegnamento(result.getString("INSEGNAMENTO"));
+			} else {
+				throw new DAOException("Elaborato non trovato: id non valido");
 			}
 			return elaborato;
 		} catch (SQLException e) {

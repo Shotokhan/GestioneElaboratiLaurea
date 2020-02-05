@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,7 +34,6 @@ public class AssegnazioneDAO {
 			PreparedStatement stmt = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 			stmt.setInt(1, elaborato.getIdElaborato());
 			stmt.setInt(2, studente.getIdStudente());
-			// stmt.setDate(3, java.sql.Date.valueOf(LocalDate.now()));
 			conn.setAutoCommit(false);
 			// begin transaction
 			stmt.executeUpdate();
@@ -44,6 +44,7 @@ public class AssegnazioneDAO {
 			ResultSet result = stmt.getGeneratedKeys();
 			if(result.next()) {
 				assegnazione.setIdAssegnazione(result.getInt("IDASSEGNAZIONE"));
+				assegnazione.setDataAssegnazione(java.sql.Date.valueOf(LocalDate.now()));
 			}
 			return assegnazione;
 		} catch (SQLException e) {
@@ -100,6 +101,8 @@ public class AssegnazioneDAO {
 				assegnazione.setIdAssegnazione(result.getInt("IDASSEGNAZIONE"));
 				assegnazione.setDataAssegnazione(result.getDate("DATAASSEGNAZIONE"));
 				assegnazione.setStudente(studente);
+			} else {
+				throw new DAOException("Non esiste un'assegnazione per questo studente");
 			}
 			return assegnazione;
 		} catch (SQLException e) {

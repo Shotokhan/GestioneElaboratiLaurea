@@ -76,8 +76,8 @@ public class DataDefinition {
 				System.out.println(definition);
 				stmt.executeUpdate(definition);
 			}
-			DBManager.closeConnection();
 		} catch (SQLException e) {
+			System.out.println("Errore creazione tabelle");
 			dropTables();
 		}
 	}
@@ -107,7 +107,6 @@ public class DataDefinition {
 				System.out.println(definition);
 				stmt.executeUpdate(definition);
 			}
-			DBManager.closeConnection();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

@@ -44,6 +44,8 @@ public class DocenteDAO {
 				docente.setIdDocente(result.getInt("IDDOCENTE"));
 				docente.setListaElaborati((ArrayList<Elaborato>) elaboratoDAO.read(docente));
 				docente.setListaAssegnazioni((ArrayList<Assegnazione>) assegnazioneDAO.read(docente));
+			} else {
+				throw new DAOException("Docente non trovato: id non valido");
 			}
 			return docente;
 		} catch (SQLException e) {
@@ -67,6 +69,8 @@ public class DocenteDAO {
 				docente.setIdDocente(result.getInt("IDDOCENTE"));
 				docente.setListaElaborati((ArrayList<Elaborato>) elaboratoDAO.read(docente));
 				docente.setListaAssegnazioni((ArrayList<Assegnazione>) assegnazioneDAO.read(docente));
+			} else {
+				throw new DAOException("Docente non trovato: è stato passato un elaborato con id non valido");
 			}
 			return docente;
 		} catch (SQLException e) {

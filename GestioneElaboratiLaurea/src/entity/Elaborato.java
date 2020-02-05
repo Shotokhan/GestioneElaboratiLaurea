@@ -32,4 +32,14 @@ public class Elaborato {
 	public void setInsegnamento(String insegnamento) {
 		this.insegnamento = insegnamento;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Elaborato)) {
+			return false;
+		} else {
+			Elaborato other = (Elaborato) obj;
+			return this.getIdElaborato() == other.getIdElaborato();
+		}
+	}
 }

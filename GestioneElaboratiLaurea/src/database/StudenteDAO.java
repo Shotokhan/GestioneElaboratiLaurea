@@ -42,7 +42,13 @@ public class StudenteDAO {
 			if(result.next()) {
 				studente.setIdStudente(result.getInt("IDSTUDENTE"));
 				studente.setCFU(result.getInt("CFU"));
-				studente.setElaborato(assegnazioneDAO.read(studente));
+				try {
+					studente.setElaborato(assegnazioneDAO.read(studente));
+				} catch(DAOException e) {
+					studente.setElaborato(null);
+				}
+			} else {
+				throw new DAOException("Studente non trovato: id non valido");
 			}
 			return studente;
 		} catch (SQLException e) {
@@ -62,6 +68,8 @@ public class StudenteDAO {
 				studente.setIdStudente(result.getInt("IDSTUDENTE"));
 				studente.setCFU(result.getInt("CFU"));
 				studente.setElaborato(assegnazione);
+			} else {
+				throw new DAOException("Studente non trovato: id non valido");
 			}
 			return studente;
 		} catch (SQLException e) {
