@@ -30,6 +30,24 @@ public class StudenteDAO {
 		}
 	}
 	
+	public boolean read(int idStudente, StatoStudente stato) throws DAOException {
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM STUDENTE WHERE IDSTUDENTE = ? AND STATOSTUDENTE = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, idStudente);
+			stmt.setString(2, stato.toString());
+			ResultSet result = stmt.executeQuery();
+			if(result.next()) {
+				return true;	
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Lettura studente non riuscita");
+		}
+	}
+	
 	public Studente read(int idStudente) throws DAOException {
 		AssegnazioneDAO assegnazioneDAO = new AssegnazioneDAO();
 		Studente studente = new Studente();

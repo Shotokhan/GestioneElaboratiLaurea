@@ -35,9 +35,17 @@ public class GestioneElaborati {
 	}
 	
 	public Assegnazione richiestaAssegnazioneElaborato(Richiesta richiesta) throws AssegnazioneElaboratoException {
-		ArrayList<Elaborato> listaElaboratiPreferenze = new ArrayList<Elaborato>();
 		try {
 			richiesta = richiestaDAO.create(richiesta);
+		} catch (DAOException e) {
+			throw new AssegnazioneElaboratoException("Non è stato possibile inoltrare la richiesta");
+		}
+		return servizioAssegnazioneElaborato(richiesta);
+	}
+	
+	private Assegnazione servizioAssegnazioneElaborato(Richiesta richiesta) throws AssegnazioneElaboratoException {
+		ArrayList<Elaborato> listaElaboratiPreferenze = new ArrayList<Elaborato>();
+		try {
 			if(richiesta.getStudente().getCFU() < numCFU) {
 				richiestaDAO.update(StatoRichiesta.RESPINTA, richiesta);
 				richiesta.setStatoRichiesta(StatoRichiesta.RESPINTA);
@@ -48,7 +56,9 @@ public class GestioneElaborati {
 			}
 			
 			for(Preferenza preferenza : richiesta.getListaPreferenze()) {
-				if(assegnazioneDAO.read(preferenza.getElaborato().getDocente()).size() >= 10) {
+				if(preferenza.getStato().equals(StatoRichiesta.RESPINTA)) {
+					// nothing to do - continue cycle
+				} else if(assegnazioneDAO.read(preferenza.getElaborato().getDocente()).size() >= 10) {
 					preferenzaDAO.update(StatoRichiesta.RESPINTA, preferenza);
 					preferenza.setStato(StatoRichiesta.RESPINTA);
 				} else {
@@ -85,24 +95,28 @@ public class GestioneElaborati {
 					return assegnazioneDAO.create(elaborato, richiesta.getStudente());
 				}
 			}
-			richiestaDAO.update(StatoRichiesta.RESPINTA, richiesta);
-			richiesta.setStatoRichiesta(StatoRichiesta.RESPINTA);
 			throw new AssegnazioneElaboratoException("Non è stato possibile assegnare un elaborato: nessun elaborato rimanente");
 			
 		} catch (DAOException cause) {
-			try {
-				richiesta.setStatoRichiesta(StatoRichiesta.RESPINTA);
-				for(Preferenza preferenza : richiesta.getListaPreferenze()) {
-					preferenza.setStato(StatoRichiesta.RESPINTA);
-				}
-				richiestaDAO.update(StatoRichiesta.RESPINTA, richiesta);
-				
-			} catch (DAOException e) {
-				System.err.println("E' possibile che ci siano inconsistenze nella base di dati");
-			}
-			
 			throw new AssegnazioneElaboratoException("Non è stato possibile assegnare "
 					+ "un elaborato", cause);
+		}
+	}
+	
+	public void serviRichiesteInAttesa() {
+		try {
+			ArrayList<Richiesta> listaRichiesteInAttesa = (ArrayList<Richiesta>) richiestaDAO.read(StatoRichiesta.IN_ATTESA);
+			for(Richiesta richiesta : listaRichiesteInAttesa) {
+				try {
+					servizioAssegnazioneElaborato(richiesta);
+				} catch (AssegnazioneElaboratoException e) {
+					// TODO Blocco catch generato automaticamente
+					e.printStackTrace();
+				}
+			}
+		} catch (DAOException e) {
+			// TODO Blocco catch generato automaticamente
+			e.printStackTrace();
 		}
 	}
 	
