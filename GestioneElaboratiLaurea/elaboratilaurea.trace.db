@@ -497,3 +497,12 @@ org.h2.jdbc.JdbcSQLSyntaxErrorException: Column "DATAASSEGNAZIONE" not found [42
 	at database.AssegnazioneDAO.create(AssegnazioneDAO.java:47)
 	at control.GestioneElaborati.richiestaAssegnazioneElaborato(GestioneElaborati.java:61)
 	at main.Main.main(Main.java:53)
+2020-02-05 21:22:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DOCENTE" already exists; SQL statement:
+CREATE TABLE DOCENTE(IDDOCENTE INT AUTO_INCREMENT PRIMARY KEY); [42101-200]
+2020-02-05 21:22:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "STUDENTE" not found; SQL statement:
+INSERT INTO STUDENTE(CFU, STATOSTUDENTE) VALUES(?, ?); [42102-200]
+2020-02-05 21:22:27 jdbc[3]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DOCENTE" not found; SQL statement:
+DELETE FROM DOCENTE [42102-200]

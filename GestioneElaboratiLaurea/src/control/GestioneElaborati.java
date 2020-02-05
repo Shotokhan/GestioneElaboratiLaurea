@@ -55,22 +55,21 @@ public class GestioneElaborati {
 				throw new AssegnazioneElaboratoException("Non è stato possibile assegnare un elaborato: CFU insufficienti");
 			}
 			
+			Scanner stubLink = new Scanner(System.in);
 			for(Preferenza preferenza : richiesta.getListaPreferenze()) {
+				listaElaboratiPreferenze.add(preferenza.getElaborato());
 				if(preferenza.getStato().equals(StatoRichiesta.RESPINTA)) {
 					// nothing to do - continue cycle
 				} else if(assegnazioneDAO.read(preferenza.getElaborato().getDocente()).size() >= 10) {
 					preferenzaDAO.update(StatoRichiesta.RESPINTA, preferenza);
 					preferenza.setStato(StatoRichiesta.RESPINTA);
 				} else {
-					Scanner stubLink = new Scanner(System.in);
 					try {
 						if(stubEmail(preferenza, stubLink)) {
 							richiestaDAO.update(StatoRichiesta.ACCOLTA, richiesta);
 							richiesta.setStatoRichiesta(StatoRichiesta.ACCOLTA);
 							stubLink.close();
 							return assegnazioneDAO.create(preferenza.getElaborato(), richiesta.getStudente());
-						} else {
-							listaElaboratiPreferenze.add(preferenza.getElaborato());
 						}
 					} catch (IOException e) {
 						System.err.println("Problema nella comunicazione con il docente");

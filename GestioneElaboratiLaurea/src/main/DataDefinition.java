@@ -73,7 +73,7 @@ public class DataDefinition {
 			createTableStatements.add(caricamento);
 			Statement stmt = conn.createStatement();
 			for(String definition : createTableStatements) {
-				System.out.println(definition);
+				// System.out.println(definition);
 				stmt.executeUpdate(definition);
 			}
 		} catch (SQLException e) {
@@ -104,7 +104,7 @@ public class DataDefinition {
 			dropTableStatements.add(docente);	
 			Statement stmt = conn.createStatement();
 			for(String definition : dropTableStatements) {
-				System.out.println(definition);
+				// System.out.println(definition);
 				stmt.executeUpdate(definition);
 			}
 		} catch (SQLException e) {
