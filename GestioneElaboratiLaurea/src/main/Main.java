@@ -55,6 +55,29 @@ public class Main {
 			System.out.println(assegnazione.getStudente().getIdStudente() == studente.getIdStudente());
 			System.out.println(assegnazione.getDataAssegnazione());
 			
+			for(int i=0; i<10; i++) {
+				Richiesta req = new Richiesta();
+				Studente stud = new Studente();
+				stud.setCFU(180);
+				stud = studenteDAO.create(stud);
+				req.setStudente(stud);
+				req.setListaPreferenze(new ArrayList<Preferenza>());
+				try {
+					gestioneElaborati.richiestaAssegnazioneElaborato(req);
+				} catch(Exception e) {
+					System.out.println("Nuovo studente in attesa di servizio: " + e.getMessage());
+				}
+			}
+			
+			for(int i=0; i<10; i++) {
+				elaborato = new Elaborato();
+				elaborato.setDocente(docente);
+				elaborato.setInsegnamento("");
+				elaborato = gestioneElaborati.inserisciNuovoElaborato(elaborato);
+			}
+			gestioneElaborati.serviRichiesteInAttesa();
+			System.out.println("Le richieste in attesa sono state servite");
+			
 			DBManager.closeConnection();
 			
 		} catch (Exception e) {
