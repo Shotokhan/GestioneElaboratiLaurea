@@ -25,4 +25,14 @@ public class Studente {
 		this.elaborato = elaborato;
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Studente) {
+			Studente other = (Studente) obj;
+			return this.getIdStudente() == other.getIdStudente();
+		} else {
+			return false;
+		}
+	}
+	
 }

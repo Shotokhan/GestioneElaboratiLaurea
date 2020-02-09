@@ -110,6 +110,31 @@ public class AssegnazioneDAO {
 		}
 	}
 	
+	public Assegnazione read(int idAssegnazione) throws DAOException {
+		ElaboratoDAO elaboratoDAO = new ElaboratoDAO();
+		StudenteDAO studenteDAO = new StudenteDAO();
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM ASSEGNAZIONE WHERE IDASSEGNAZIONE = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, idAssegnazione);
+			ResultSet result = stmt.executeQuery();
+			Assegnazione assegnazione = null;
+			if(result.next()) {
+				assegnazione = new Assegnazione(
+						elaboratoDAO.read(result.getInt("ELABORATO")));
+				assegnazione.setIdAssegnazione(result.getInt("IDASSEGNAZIONE"));
+				assegnazione.setDataAssegnazione(result.getDate("DATAASSEGNAZIONE"));
+				assegnazione.setStudente(studenteDAO.read(result.getInt("STUDENTE")));
+			} else {
+				throw new DAOException("Non esiste un'assegnazione con questo id");
+			}
+			return assegnazione;
+		} catch (SQLException e) {
+			throw new DAOException("Lettura assegnazione non riuscita");
+		}
+	}
+	
 	public void update() {};
 	
 	public boolean delete(int idAssegnazione) throws DAOException {

@@ -26,5 +26,15 @@ public class Docente {
 	public void setListaAssegnazioni(ArrayList<Assegnazione> listaAssegnazioni) {
 		this.listaAssegnazioni = listaAssegnazioni;
 	}
-
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof Docente) {
+			Docente other = (Docente) obj;
+			return this.getIdDocente() == other.getIdDocente();
+		} else {
+			return false;
+		}
+	}
+	
 }

@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 import entity.Assegnazione;
@@ -56,18 +57,87 @@ public class CaricamentoDAO {
 		}
 	}
 	
-	public Caricamento read(Caricamento caricamento) {
-		return caricamento;
+	public Caricamento read(int idCaricamento) throws DAOException {
+		AssegnazioneDAO assegnazioneDAO = new AssegnazioneDAO();
+		SedutaDiLaureaDAO sedutaDiLaureaDAO = new SedutaDiLaureaDAO();
+		Caricamento caricamento = null;
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM CARICAMENTO WHERE IDCARICAMENTO = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, idCaricamento);
+			ResultSet result = stmt.executeQuery();
+			if(result.next()) {
+				caricamento = new Caricamento(assegnazioneDAO.read(result.getInt("ASSEGNAZIONE")));
+				caricamento.setDataCaricamento(result.getDate("DATACARICAMENTO"));
+				caricamento.setSedutaDiLaurea(sedutaDiLaureaDAO.read(result.getInt("SEDUTADILAUREA")));
+				caricamento.setIdCaricamento(result.getInt("IDCARICAMENTO"));
+				return caricamento;
+			} else {
+				throw new DAOException("Impossibile leggere il caricamento: id non corretto");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Impossibile leggere il caricamento");
+		}
 	}
 	
-	public List<Caricamento> read(SedutaDiLaurea seduta) {
-		return null;
+	public Caricamento read(int idCaricamento, SedutaDiLaurea seduta) throws DAOException {
+		AssegnazioneDAO assegnazioneDAO = new AssegnazioneDAO();
+		Caricamento caricamento = null;
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM CARICAMENTO WHERE IDCARICAMENTO = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, idCaricamento);
+			ResultSet result = stmt.executeQuery();
+			if(result.next()) {
+				caricamento = new Caricamento(assegnazioneDAO.read(result.getInt("ASSEGNAZIONE")));
+				caricamento.setDataCaricamento(result.getDate("DATACARICAMENTO"));
+				caricamento.setSedutaDiLaurea(seduta);
+				caricamento.setIdCaricamento(result.getInt("IDCARICAMENTO"));
+				return caricamento;
+			} else {
+				throw new DAOException("Impossibile leggere il caricamento: id non corretto");
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Impossibile leggere il caricamento");
+		}
+	}
+	
+	public List<Caricamento> read(SedutaDiLaurea seduta) throws DAOException {
+		ArrayList<Caricamento> listaCaricamenti = new ArrayList<Caricamento>();
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "SELECT * FROM CARICAMENTO WHERE SEDUTADILAUREA = ?";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, seduta.getIdSedutaDiLaurea());
+			ResultSet result = stmt.executeQuery();
+			while(result.next()) {
+				listaCaricamenti.add(this.read(result.getInt("IDCARICAMENTO"), seduta));
+			}
+			return listaCaricamenti;
+		} catch (SQLException e) {
+			throw new DAOException("Lettura caricamenti relativi alla seduta non riuscita");
+		}
 	}
 
 	public void update() {}
 	
-	public boolean delete(Caricamento caricamento) {
-		return false;
+	public boolean delete(Caricamento caricamento) throws DAOException {
+		try {
+			Connection conn = DBManager.getConnection();
+			String query = "DELETE FROM CARICAMENTO WHERE IDCARICAMENTO = ?;";
+			PreparedStatement stmt = conn.prepareStatement(query);
+			stmt.setInt(1, caricamento.getIdCaricamento());
+			int deleted = stmt.executeUpdate();
+			if(deleted > 0) {
+				return true;
+			} else {
+				return false;
+			}
+		} catch (SQLException e) {
+			throw new DAOException("Non è stato possibile eliminare il caricamento");
+		}
 	}
 	
 }
